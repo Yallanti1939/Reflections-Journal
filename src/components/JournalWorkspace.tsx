@@ -310,6 +310,16 @@ export const JournalWorkspace: React.FC<JournalWorkspaceProps> = ({
             <div>
               <p className="font-semibold">Persistence / Generation Notice</p>
               <p className="text-rose-700">{errorNotice.message}</p>
+              {errorNotice.message.includes("ai.studio/projects") && (
+                <a
+                  href="https://ai.studio/projects"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block mt-1 underline font-medium text-rose-800 hover:text-rose-950"
+                >
+                  Manage Billing / Credits in Google AI Studio ↗
+                </a>
+              )}
             </div>
           </div>
           {errorNotice.canRetry && (

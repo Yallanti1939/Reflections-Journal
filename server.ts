@@ -13,12 +13,13 @@ const PORT = 3000;
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true, limit: "2mb" }));
 
-// Fallback ladder as required by Production Directives
+// Fallback ladder as required by Production Directives and Gemini API Skill
 const MODEL_FALLBACK_LADDER = [
   "gemini-3.6-flash",
   "gemini-3.1-flash-lite",
   "gemini-flash-latest",
   "gemini-3.7-flash",
+  "gemini-3.8-flash",
 ];
 
 // Lazy initialization of GoogleGenAI
@@ -99,8 +100,14 @@ async function generateContentWithFallback(params: GenerateParams) {
     }
   }
 
+  const rawMsg = lastError?.message || "Unknown error";
+  let cleanMsg = rawMsg;
+  if (rawMsg.includes("prepayment credits are depleted") || rawMsg.includes("RESOURCE_EXHAUSTED")) {
+    cleanMsg = "Your Google AI Studio prepayment credits are depleted. Please top up your project billing at https://ai.studio/projects or provide an API key with active quota.";
+  }
+
   throw new Error(
-    `All models in fallback ladder failed. Last error: ${lastError?.message || "Unknown error"}`
+    `All models in fallback ladder failed. ${cleanMsg}`
   );
 }
 
