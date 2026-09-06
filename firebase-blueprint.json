@@ -1,0 +1,27 @@
+{
+  "entities": {
+    "Interaction": {
+      "title": "Interaction",
+      "description": "A user-isolated journal entry or multi-turn reflection dialogue with Gemini",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "mode": { "type": "string", "enum": ["reflection", "summary", "brainstorm"] },
+        "turns": { "type": "array" },
+        "summary": { "type": "string", "maxLength": 5000 },
+        "tags": { "type": "array" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "title", "mode", "turns", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/interactions/{interactionId}": {
+      "schema": "Interaction",
+      "description": "Private, owner-bound journal entries and reflections for an authenticated user"
+    }
+  }
+}
